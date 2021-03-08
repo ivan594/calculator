@@ -5,10 +5,10 @@
     <div class="calculator">
       <input v-model.number="inputValue" class="input" type="number">
       <div class="buttons">
-        <button class="button" @click="onOperationClick('plus')">+</button>
-        <button class="button" @click="onOperationClick('minus')">-</button>
-        <button class="button" @click="onOperationClick('multiply')">*</button>
-        <button class="button" @click="onOperationClick('divide')">/</button>
+        <button class="button" @click="onOperationClick(EOperations.PLUS)">+</button>
+        <button class="button" @click="onOperationClick(EOperations.MINUS)">-</button>
+        <button class="button" @click="onOperationClick(EOperations.MULTIPLY)">*</button>
+        <button class="button" @click="onOperationClick(EOperations.DIVIDE)">/</button>
       </div>
       <button class="button" @click="result">=</button>
     </div>
@@ -17,7 +17,12 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
+enum EOperations {
+  PLUS = 'opPlus',
+  MINUS = 'opMinus',
+  MULTIPLY = 'opMultiply',
+  DIVIDE = 'opDivide'
+}
 export default Vue.extend({
   name: 'Calculator',
   props: {
@@ -31,39 +36,42 @@ export default Vue.extend({
       inputValue: 0,
       lastInputValue: 0,
       lastUsedMethod: '',
+      EOperations,
     };
   },
-  computed: {
-    operationsMap(): any {
-      return {
-        plus: this.opPlus,
-        minus: this.opMinus,
-        multiply: this.opMultiply,
-        divide: this.opDivide,
-      };
-    },
-  },
   methods: {
-    onOperationClick(operation) {
+    onOperationClick(operation: string) {
+      if (this.lastUsedMethod) {
+        const a = this.lastInputValue;
+        const b = this.inputValue;
+        this.lastInputValue = this[this.lastUsedMethod](a, b);
+        this.inputValue = 0;
+        this.lastUsedMethod = operation;
+        return;
+      }
       this.lastInputValue = this.inputValue;
       this.inputValue = 0;
       this.lastUsedMethod = operation;
     },
     result() {
+      if (!this.lastUsedMethod) {
+        return;
+      }
       const a = this.lastInputValue;
       const b = this.inputValue;
-      this.inputValue = this.operationsMap[this.lastUsedMethod](a, b);
+      this.inputValue = this[this.lastUsedMethod](a, b);
+      this.lastUsedMethod = undefined;
     },
-    opPlus(a: number, b: number) {
+    [EOperations.PLUS](a: number, b: number) {
       return a + b;
     },
-    opMinus(a: number, b: number) {
+    [EOperations.MINUS](a: number, b: number) {
       return a - b;
     },
-    opMultiply(a: number, b: number) {
+    [EOperations.MULTIPLY](a: number, b: number) {
       return a * b;
     },
-    opDivide(a: number, b: number) {
+    [EOperations.DIVIDE](a: number, b: number) {
       return a / b;
     },
   },
