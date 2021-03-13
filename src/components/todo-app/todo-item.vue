@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
 export default Vue.extend({
   name: 'TodoAppItem',
   props: {
@@ -78,8 +79,13 @@ export default Vue.extend({
       }, $event);
       this.isEditModeEnabled = false;
     },
-    onDelete() {
-      console.log('delete me');
+    onDelete($event) {
+      const { id } = this;
+      this.$emit('delete', {
+        id,
+      }, $event);
+      // this.$emit('delete', {}, $event);
+      // console.log('delete me');
     },
   },
 });

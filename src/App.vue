@@ -14,6 +14,7 @@ import Vue from 'vue';
 import Calculator from './components/Calculator.vue';
 import TodoApp from './components/todo-app/index.vue';
 import TodoItem from './components/todo-app/todo-item-class';
+
 const todoListTasks = [
   new TodoItem({
     priority: 2,

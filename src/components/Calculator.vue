@@ -17,6 +17,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+
 enum EOperations {
   PLUS = 'opPlus',
   MINUS = 'opMinus',

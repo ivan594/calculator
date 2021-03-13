@@ -33,6 +33,7 @@
         :item="todoItem"
 
         @save="onTodoAppItemSave"
+        @delete="deleteTodo"
       />
     </div>
   </div>
@@ -42,6 +43,7 @@
 import Vue from 'vue';
 import TodoAppItem from './todo-item.vue';
 import TodoItem from './todo-item-class';
+
 export default Vue.extend({
   name: 'TodoApp',
   components: {
@@ -73,12 +75,20 @@ export default Vue.extend({
       });
       this.innerTasks.unshift(newItem);
     },
-    onTodoAppItemSave(payload, $event) {
-      // найти внутри массива нужный элемент,
-      // скопировать его значение в переменную
-      // обновить у переменной поле text
-      // добавить новый элемент в массив, вместо старого.
-      console.log(payload, $event);
+    onTodoAppItemSave(payload, $event): void {
+      const { id, value } = payload;
+      const newId = id;
+      const newValue = value;
+      const innerTasksValue = this.tasks;
+      const newObject = innerTasksValue.find((obj) => obj.id === newId);
+      newObject.text = newValue;
+    },
+    deleteTodo(payload, $event): void {
+      const { id } = payload;
+      const innerTasksValueDelete = this.tasks;
+      const index = innerTasksValueDelete.findIndex((obj) => obj.id === id);
+      innerTasksValueDelete.splice(index, 1);
+      console.log('Я пытаюсь удалить этот объект');
     },
   },
 });
